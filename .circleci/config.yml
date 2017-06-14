@@ -1,0 +1,28 @@
+version: 2
+machine:
+  environment:
+    SUITE: xenial
+    ARCH: armhf
+    SUBARCH: raspi2
+    PROJECT: ubuntu-cpc
+    LIVE_CONFIG_DEBUG: true
+install: 
+jobs:
+  build:
+    machine: true
+    working_directory: ~/
+    steps:
+      - run: 
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y bzr qemu-system-arm live-build livecd-rootfs qemu-user-static
+            # Install latest livecd-rootfs
+            wget http://archive.ubuntu.com/ubuntu/pool/main/l/livecd-rootfs/livecd-rootfs_2.441_amd64.deb
+            wget http://archive.ubuntu.com/ubuntu/pool/main/l/live-build/live-build_3.0~a57-1ubuntu29_all.deb
+            sudo dpkg -i livecd-rootfs_2.441_amd64.deb live-build_3.0~a57-1ubuntu29_all.deb
+            # start build image
+            ln -s /usr/share/livecd-rootfs/live-build/auto .
+            mkdir chroot
+            LB_BOOTSTRAP_INCLUDE="apt-transport-https gnupg" SUITE=xenial ARCH=armhf PROJECT=ubuntu-cpc SUBPROJECT=system-image SUBARCH=raspi2 lb config --apt-secure false --apt-source-archives false --bootstrap-flavour minimal --cache-stages false --distribution xenial --mode ubuntu --security false --binary-images none --chroot-filesystem ext4 --hdd-label cloudimg-rootfs --initramfs none --system normal --architectures armhf --bootstrap-qemu-arch armhf --bootstrap-qemu-static /usr/bin/qemu-arm-static --firmware-binary false --firmware-chroot false --linux-flavours raspi2 --mirror-bootstrap "http://ports.ubuntu.com/ubuntu-ports/" --mirror-binary "http://ports.ubuntu.com/ubuntu-ports/" --parent-mirror-bootstrap "http://ports.ubuntu.com/ubuntu-ports/" --parent-mirror-binary "http://ports.ubuntu.com/ubuntu-ports/"
+            sudo LB_BOOTSTRAP_INCLUDE="apt-transport-https gnupg" SUITE=xenial ARCH=armhf PROJECT=ubuntu-cpc SUBPROJECT=system-image SUBARCH=raspi2 lb build --verbose
+            ls -al

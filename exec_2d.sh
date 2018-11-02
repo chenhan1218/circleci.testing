@@ -27,8 +27,9 @@ catkin_make_isolated --install --use-ninja
 source install_isolated/setup.bash
 
 cd $DIR
+# Download the 2D backpack example bag.
 wget --quiet https://storage.googleapis.com/cartographer-public-data/bags/backpack_2d/cartographer_paper_deutsches_museum.bag
 
 # run cartographer
-./xvfb.py `pwd`/record-cartographer.sh
+./xvfb.py `pwd`/record-cartographer_2d.sh
 

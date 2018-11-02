@@ -1,0 +1,42 @@
+version: 2
+jobs:
+  build:
+    machine: true
+    steps:
+      - checkout
+      - run: |
+          docker pull osrf/ros:melodic-desktop-full
+          docker run -v `pwd`:/mnt osrf/ros:melodic-desktop-full bash -c "cd /mnt;./exec_2d.sh"
+          ls -lah .
+      - persist_to_workspace:
+          root: .
+          paths:
+            - out*.ogv
+  publish-github-release:
+    docker:
+      - image: circleci/golang:1.11.1
+    steps:
+      - attach_workspace:
+          at: ./
+      - run:
+          name: "Publish Release on GitHub"
+          command: |
+            ls -lah ./
+            go get github.com/tcnksm/ghr
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${CIRCLE_TAG} ./
+workflows:
+  version: 2
+  main:
+    jobs:
+      - build:
+          filters:  # required since `deploy` has tag filters AND requires `build`
+            tags:
+              only: /.*/
+      - publish-github-release:
+          requires:
+            - build
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /.*/

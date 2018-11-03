@@ -23,15 +23,12 @@ rosdep update
 rosdep install --from-paths src --ignore-src --rosdistro=${ROS_DISTRO} -y
 
 # Build and install.
-# catkin_make_isolated --install --use-ninja
-# source install_isolated/setup.bash
-tar xzf /mnt/cartographer.tar.gz -C /
-source /opt/cartographer/setup.bash
+catkin_make_isolated --install --use-ninja
+source install_isolated/setup.bash
 
 cd $DIR
 # Download the 3D backpack example bag.
 wget --quiet https://storage.googleapis.com/cartographer-public-data/bags/backpack_3d/with_intensities/b3-2016-04-05-14-14-00.bag
 
 # run cartographer
-./xvfb.py `pwd`/record-cartographer_3d.sh
-
+./xvfb.py `pwd`/record-cartographer.sh roslaunch `pwd`/demo_backpack_3d.launch bag_filename:=`pwd`/b3-2016-04-05-14-14-00.bag

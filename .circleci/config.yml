@@ -6,7 +6,7 @@ jobs:
       - checkout
       - run: |
           docker pull osrf/ros:melodic-desktop-full
-          docker run -v `pwd`:/mnt osrf/ros:melodic-desktop-full bash -c "cd /mnt;./exec_2d.sh"
+          docker run -v `pwd`:/mnt osrf/ros:melodic-desktop-full bash -c "cd /mnt;./exec_offline-3d.sh"
           ls -lah .
       - persist_to_workspace:
           root: .

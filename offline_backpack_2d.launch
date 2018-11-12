@@ -27,7 +27,7 @@
   </group>
 
   <node name="cartographer_offline_node" pkg="cartographer_ros"
-      required="$(arg no_rviz)"
+      required="true"
       type="cartographer_offline_node" args="
           -configuration_directory $(find cartographer_ros)/configuration_files
           -configuration_basenames backpack_2d.lua

@@ -11,7 +11,7 @@ jobs:
   steps:
   - script: |
       docker pull osrf/ros:melodic-desktop-full
-      docker run -v `pwd`:/mnt osrf/ros:melodic-desktop-full bash -c "cd /mnt;./exec_2d.sh"
+      docker run -v `pwd`:/mnt osrf/ros:melodic-desktop-full bash -c "cd /mnt;./exec_offline-2d.sh"
       ls -lah .
       GIT_TAG=`git tag -l --points-at HEAD|head -n 1`
       if [ -z "$GIT_TAG" ]; then exit 0; fi

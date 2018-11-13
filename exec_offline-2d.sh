@@ -30,6 +30,10 @@ cd $DIR
 # Download the 2D backpack example bag.
 wget --quiet https://storage.googleapis.com/cartographer-public-data/bags/backpack_2d/cartographer_paper_deutsches_museum.bag
 
+# workaround: azure pipeline have build time limit of 360 minutes
+# filter rosbag to decrease bag length
+rosbag filter cartographer_paper_deutsches_museum.bag cartographer_paper_deutsches_museum.filter.bag "t.to_sec() <= 1432648600"
+
 # run cartographer
-./xvfb.py `pwd`/record-cartographer.sh roslaunch `pwd`/offline_backpack_2d.launch bag_filenames:=`pwd`/cartographer_paper_deutsches_museum.bag
+./xvfb.py `pwd`/record-cartographer.sh roslaunch `pwd`/offline_backpack_2d.launch bag_filenames:=`pwd`/cartographer_paper_deutsches_museum.filter.bag
 
